@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html ng-app="myApp">
+<head>
+
+<style>
+html,body{
+	padding:0;
+	border:0;
+}
+.box{
+	width:60%;
+	margin:0 auto;
+	position:relative;
+	top:200px;
+	background-color:#d3d3d3;
+	height:auto;
+	font-size:1.5em;
+}
+input{
+	width:50%;
+	height:auto;
+	font-size:1em;
+}
+
+
+.choice:focus, .choice:hover,.choice:visited {
+    
+    background-color: #A9A9A9;
+	color:white;
+	/* some darker colour than the original colour */;
+}
+
+.submitContainer{
+	position:relative;
+	width:50%;
+}
+.submit{
+	position:absolute;
+	width:50%;
+	background-color:white;
+	color:black;
+	font-size:1.5em;
+	top:50px;
+	left:200px;
+}
+
+.submit:focus, .submit:hover{
+	background-color: gray;
+	color:white;
+}
+
+#error{
+	color:red;
+}
+.input:focus {
+    height:300px;
+}
+.input{
+    width:400px;
+    height:200px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="box"  ng-controller="myController">
+
+	<div>
+		<h1>Search: <input type="text" ng-model="search"></input>
+		
+		
+		</h1>
+		
+		<div>
+			<p> Choose one database for your search:</p>
+			<input class = "choice" type="submit" value= "Twitter" ng-click="selectTwitter()">
+			<input class = "choice" type="submit" value= "Amazon" ng-click="selectAmazon()">
+		</div>
+		
+		<div class = "submitContainer">
+			<button class = "submit" ng-click="onclick()">Submit</button>
+		</div>
+		
+	</div>
+	
+	
+	<p>Your Search String: {{search}}</p>
+	<p> Twitter: {{twitter}}</p>
+	<p> Amazon : {{amazon}}</p>
+	
+	
+    <div id="error">{{errorMessage }} </div>
+    <p> Number of matches found: {{length}}</p>
+
+
+    
+	<div ng-repeat="doc in docs" >
+		<hr>
+		
+		<div ng-controller = "resultController" ng-init="formatDoc(doc)">
+			<ul>
+			
+				<li> {{resultText}}
+				
+					<!--<li>User name : {{doc.fromUser}}, User id: {{doc.fromUserId}},
+					 Tweet Created At: {{date[1] + " " + date[2] + " " + date[3]}}-->
+
+					<button ng-click="listclick()">{{seeButton}}</button>
+					<div ng-hide="showing">
+						{{post}}
+						
+						<p>Comments:</p>
+						<div ng-repeat="comment in comments">
+							<ul>
+								<li>{{comment}}</li>
+							</ul>
+						</div>
+						<textarea class="input" rows="10" cols="10" ng-model="newcomment" >
+						{{newcomment}}
+						</textarea>
+						
+						
+					</div> 
+				</li>
+				
+				
+				
+			</ul>
+		</div>
+		
+		
+	</div>
+
+</div>
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+<script src="./controller.js"></script>
+</body>
+</html>
