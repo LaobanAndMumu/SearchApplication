@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html ng-app="myApp">
 <head>
-
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+<script src="./controller.js"></script>
 <style>
 html,body{
 	padding:0;
@@ -11,7 +12,8 @@ html,body{
 	width:60%;
 	margin:0 auto;
 	position:relative;
-	top:200px;
+	top:100px;
+	padding:50px;
 	background-color:#d3d3d3;
 	height:auto;
 	font-size:1.5em;
@@ -31,17 +33,16 @@ input{
 }
 
 .submitContainer{
-	position:relative;
+	height:100px;
 	width:50%;
+	text-align:center;
 }
 .submit{
 	position:absolute;
-	width:50%;
-	background-color:white;
+	right:100px;
 	color:black;
 	font-size:1.5em;
-	top:50px;
-	left:200px;
+	
 }
 
 .submit:focus, .submit:hover{
@@ -53,11 +54,39 @@ input{
 	color:red;
 }
 .input:focus {
-    height:300px;
+    font-size:1.5em;
+	color:gray;
 }
 .input{
     width:400px;
     height:200px;
+	resize: none; 
+	rows="10"; 
+	cols="10";
+}
+.loader {
+	position:relative;
+	left:20px;
+	border: 16px solid #f3f3f3;
+	border-radius: 50%;
+	border-top: 16px solid #3498db;
+	width: 50px;
+	height: 50px;
+	-webkit-animation: spin 2s linear infinite;
+	animation: spin 2s linear infinite;
+}
+
+@-webkit-keyframes spin {
+  0% { -webkit-transform: rotate(0deg); }
+  100% { -webkit-transform: rotate(360deg); }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+.loaderBox{
+	position:relative;
 }
 
 </style>
@@ -80,23 +109,29 @@ input{
 			<input class = "choice" type="submit" value= "Amazon" ng-click="selectAmazon()">
 		</div>
 		
-		<div class = "submitContainer">
+		
+		<span>	
 			<button class = "submit" ng-click="onclick()">Submit</button>
-		</div>
+		</span>	
 		
 	</div>
 	
 	
 	<p>Your Search String: {{search}}</p>
-	<p> Twitter: {{twitter}}</p>
-	<p> Amazon : {{amazon}}</p>
+	
+	<p> {{printDatabase}}</p>
+	
 	
 	
     <div id="error">{{errorMessage }} </div>
-    <p> Number of matches found: {{length}}</p>
+	
+    <div ng-hide="zeroLength"> {{length}}</div>
 
 
-    
+    <div class='loaderBox'>
+		<div class="loader" ng-show="loading">
+	</div>
+	
 	<div ng-repeat="doc in docs" >
 		<hr>
 		
@@ -111,16 +146,39 @@ input{
 					<button ng-click="listclick()">{{seeButton}}</button>
 					<div ng-hide="showing">
 						{{post}}
-						
-						<p>Comments:</p>
-						<div ng-repeat="comment in comments">
-							<ul>
-								<li>{{comment}}</li>
-							</ul>
+						<p>
+							<button ng-click="commentHider()">See Comments</button>
+						</p>
+					    <div ng-hide="showComment">
+							<p>Comments:</p>
+							<div ng-repeat="comment in comments">
+								<ul>
+									<li>Comment------------<br/>
+									{{comment.content}}<br />
+									
+									{{comment.time}}
+									</li>
+								</ul>
+							</div>
+							
+							<p>
+								<button ng-click="showWriteComment()">Leave Your Comment</button>
+						    </p>
+							<div ng-hide="writeComment">
+								<textarea class="input"  ng-model="newcomment" >
+									{{newcomment}}
+								</textarea>
+								
+								
+								
+								<button class = "submit1" ng-click="makeComment()">
+									Submit
+								</button>
+							
+							</div>	
 						</div>
-						<textarea class="input" rows="10" cols="10" ng-model="newcomment" >
-						{{newcomment}}
-						</textarea>
+						
+						
 						
 						
 					</div> 
@@ -137,7 +195,6 @@ input{
 </div>
 
 
-<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
-<script src="./controller.js"></script>
+
 </body>
 </html>
