@@ -7,21 +7,26 @@ controller('myController',['$scope','$http',function($scope,$http){
 	$scope.amazon = false; 
 	$scope.length;
 	$scope.errorMessage;
-	$scope.insertMessage='';
-
+	$scope.databaseUse;
+	$scope.printDatabase;
+	$scope.loading = false;
+	$scope.zeroLength=true;
+	
 	$scope.onclick = function(){
-		
+		$scope.loading = true;
 		$scope.errorMessage="";						
-        $scope.length=0;
+        $scope.length;
 		
 		if ($scope.search.trim()!=''){
 			if($scope.amazon || $scope.twitter){
 				var collection ='';
 				if ($scope.amazon){
 					collection = 'amazon_video/';
+					
 				}
 				else{
 					collection='tweets_sandy/';
+					
 				}
 				
 				$http({ url:'/search', method: "GET", 
@@ -29,23 +34,39 @@ controller('myController',['$scope','$http',function($scope,$http){
 					success(function(data,status,headers,config){
 						$scope.docs = data;
 						$scope.length = data.length;
-						if($scope.length == 0){
-					
+						
+						if($scope.length === 0){
+					        
 							$scope.errorMessage='No matches found';
+							$scope.zeroLength=true;
+						}
+						else{
+							$scope.length = 'Number of Matches Found: ' +$scope.length; 
+							$scope.zeroLength=false;
 						}
 					}).error(function(data,status,headers,config){
 						$scope.status= data.msg;
+					}).finally(function() {
+						// called no matter success or failure
+						$scope.loading = false;
 					});
 					
-				
+				     
 				
 			}
 			else{
+				$scope.zeroLength=true;
+				$scope.length='';
+				$scope.docs = [];
+				$scope.loading = false;
 				$scope.errorMessage='No collection chosen';
 				
 			}
 		}
 		else{
+			$scope.length='';
+			$scope.docs = [];
+			$scope.loading = false;
 			$scope.errorMessage='No search word submitted';
 		}
 	};
@@ -53,23 +74,31 @@ controller('myController',['$scope','$http',function($scope,$http){
 	$scope.selectTwitter=function(){
 		$scope.twitter=true;
 		$scope.amazon=false;
+		$scope.databaseUse = 'tweets_sandy';
+		$scope.printDatabase='You choose Twitter database';
 	}
 	$scope.selectAmazon=function(){
 		$scope.amazon=true;
 		$scope.twitter=false;
+		$scope.databaseUse = 'amazon_video';
+		$scope.printDatabase='You choose Amazon database';
 	}
 
 }]).
 
 controller('resultController',['$scope','$http',function($scope,$http){
 	$scope.showing = true;
+	$scope.showComment=true;
+	$scope.writeComment=true;
+	
 	$scope.seeButton = "";
 	$scope.resultText = "";
 	var idNo;
 	$scope.post = "";
 	$scope.comments=[];
 	$scope.newcomment='';
-	
+	$scope.insertMessage='';
+
 	$scope.formatDoc = function(doc){
 				
 		if ($scope.amazon) {
@@ -82,35 +111,48 @@ controller('resultController',['$scope','$http',function($scope,$http){
 		}
 		else{
 		
-			$scope.seeButton = "See Tweets about Sandy";
+			$scope.seeButton = "See Tweet Content about Sandy";
 			var date= doc.createdAt.split(' ');
 			$scope.resultText = "User name: " + doc.fromUser + ", User id: " +
 				doc.fromUserId + ", Tweet Created At: " + date[1] + " " + date[2] + " " + date[3];
 			$scope.post = doc.tweet;
-			idNo=doc.fromUserId;
-		
+			idNo = doc.fromUserId;
 		}
 		
 		$scope.comments=doc.comments;
 	}
 	
+	// make comments
 	$scope.makeComment=function(){
+		if ($scope.newcomment.trim()==''){
+			$scope.newcomment='';
+		}
 		
-		$scope.comments=$scope.comments.push($scope.newcomment);
-		
-		$http({ url:'/post', method: "POST", 
-			data:{id:idNo, comment:$scope.newcomment }).
-			success(function(data,status,headers,config){
-				$scope.insertMessage='successfully create comment';
-				
-			}).error(function(data,status,headers,config){
-				$scope.status= data.msg;
-			});
-		
+		else{
+			var published = new Date().toISOString();
+			$scope.comments.push({content:$scope.newcomment,time:published});
+			
+			$http({ url:'/post', method: "POST", 
+				data:{whichDatabase: databaseUse,id:idNo, comment:{content:$scope.newcomment,time:published} }}).
+				success(function(data,status,headers,config){
+					$scope.insertMessage='successfully create a comment';
+					
+					
+				}).error(function(data,status,headers,config){
+					$scope.status= data.msg;
+				});
+		}
+		$scope.newcomment = "";
 	}//
 	
 	$scope.listclick=function(){
 		$scope.showing = !$scope.showing;
+	}
+	$scope.commentHider=function(){
+		$scope.showComment=!$scope.showComment;
+	}
+	$scope.showWriteComment=function(){
+		$scope.writeComment=!$scope.writeComment;
 	}
 	
 }]);
