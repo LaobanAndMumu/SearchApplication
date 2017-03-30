@@ -63,6 +63,15 @@ and the message for amazon_video collection
 imported 37126 objects
 ```
 
+Still at the MongoDB shell,
+add 'comments' field to both collections, tweets_sandy and amazon_video
+
+```sh
+db.tweets_sandy.update({},{$set:{'comments':[]},{upsert:false,multi:true}})
+db.amazon_video.update({},{$set:{'comments':[]},{upsert:false,multi:true}})
+```
+
+
 Open a new terminal, go to the directory containing server.js file,
 check if node is installed, by typing
 
