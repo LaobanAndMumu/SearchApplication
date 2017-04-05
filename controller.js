@@ -9,6 +9,7 @@ controller('myController',['$scope','$http',function($scope,$http){
 	$scope.errorMessage;
 	$scope.databaseUse;
 	$scope.printDatabase;
+	
 	$scope.loading = false;
 	$scope.zeroLength=true;
 	
@@ -93,9 +94,11 @@ controller('resultController',['$scope','$http',function($scope,$http){
 	
 	$scope.seeButton = "";
 	$scope.resultText = "";
-	var idNo;
+	$scope.dbID;
+	$scope.idNo;
 	$scope.post = "";
 	$scope.comments=[];
+	$scope.commentName='';
 	$scope.newcomment='';
 	$scope.insertMessage='';
 
@@ -107,7 +110,8 @@ controller('resultController',['$scope','$http',function($scope,$http){
 			$scope.resultText = "User name: " + doc.reviewerName + ", Review ID: " +
 				doc.reviewerID + ", Review Created At: " + date[1].replace(/,/g,'') + " " + date[0] + " " + date[2];
 			$scope.post = doc.reviewText;
-			idNo=doc.reviewerID;
+			$scope.idNo=doc.reviewerID;
+			$scope.dbID = doc._id;
 		}
 		else{
 		
@@ -115,11 +119,14 @@ controller('resultController',['$scope','$http',function($scope,$http){
 			var date= doc.createdAt.split(' ');
 			$scope.resultText = "User name: " + doc.fromUser + ", User id: " +
 				doc.fromUserId + ", Tweet Created At: " + date[1] + " " + date[2] + " " + date[3];
-			$scope.post = doc.tweet;
-			idNo = doc.fromUserId;
+			$scope.post = doc.text;
+			$scope.idNo = doc.fromUserId;
+			$scope.dbID = doc._id;
 		}
-		
-		$scope.comments=doc.comments;
+
+		if(doc.comments){
+			$scope.comments = doc.comments;
+		}
 	}
 	
 	// make comments
@@ -129,19 +136,22 @@ controller('resultController',['$scope','$http',function($scope,$http){
 		}
 		
 		else{
+			$scope.message = "fired";
 			var published = new Date().toISOString();
-			$scope.comments.push({content:$scope.newcomment,time:published});
-			
+			$scope.comments.push({name:$scope.commentName,content:$scope.newcomment,time:published});
+			$scope.message="fired2";
 			$http({ url:'/post', method: "POST", 
-				data:{whichDatabase: databaseUse,id:idNo, comment:{content:$scope.newcomment,time:published} }}).
-				success(function(data,status,headers,config){
+				data:{whichDatabase: $scope.databaseUse,id:$scope.dbID, 
+				comment:{name:$scope.commentName,content:$scope.newcomment,time:published} }}
+				).success(function(data,status,headers,config){
 					$scope.insertMessage='successfully create a comment';
 					
 					
 				}).error(function(data,status,headers,config){
 					$scope.status= data.msg;
-				});
+				});			
 		}
+		$scope.commentName='';
 		$scope.newcomment = "";
 	}//
 	
