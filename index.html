@@ -1,96 +1,9 @@
 <!DOCTYPE html>
 <html ng-app="myApp">
 <head>
-<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
-<script src="./controller.js"></script>
-<style>
-html,body{
-	padding:0;
-	border:0;
-}
-.box{
-	width:60%;
-	margin:0 auto;
-	position:relative;
-	top:100px;
-	padding:50px;
-	background-color:#d3d3d3;
-	height:auto;
-	font-size:1.5em;
-}
-input{
-	width:50%;
-	height:auto;
-	font-size:1em;
-}
-
-
-.choice:focus, .choice:hover,.choice:visited {
-    
-    background-color: #A9A9A9;
-	color:white;
-	/* some darker colour than the original colour */;
-}
-
-.submitContainer{
-	height:100px;
-	width:50%;
-	text-align:center;
-}
-.submit{
-	position:absolute;
-	right:100px;
-	color:black;
-	font-size:1.5em;
-	
-}
-
-.submit:focus, .submit:hover{
-	background-color: gray;
-	color:white;
-}
-
-#error{
-	color:red;
-}
-.input:focus {
-    font-size:1.5em;
-	color:gray;
-}
-.input{
-    width:400px;
-    height:200px;
-	resize: none; 
-	rows="10"; 
-	cols="10";
-}
-.loader {
-	position:relative;
-	left:20px;
-	border: 16px solid #f3f3f3;
-	border-radius: 50%;
-	border-top: 16px solid #3498db;
-	width: 50px;
-	height: 50px;
-	-webkit-animation: spin 2s linear infinite;
-	animation: spin 2s linear infinite;
-}
-
-@-webkit-keyframes spin {
-  0% { -webkit-transform: rotate(0deg); }
-  100% { -webkit-transform: rotate(360deg); }
-}
-
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-.loaderBox{
-	position:relative;
-}
-
-</style>
-
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+	<script src="./controller.js"></script>
+	<link rel="stylesheet" media="screen" href="style.css">
 </head>
 
 <body>
@@ -99,8 +12,7 @@ input{
 
 	<div>
 		<h1>Search: <input type="text" ng-model="search"></input>
-		
-		
+				
 		</h1>
 		
 		<div>
@@ -108,26 +20,19 @@ input{
 			<input class = "choice" type="submit" value= "Twitter" ng-click="selectTwitter()">
 			<input class = "choice" type="submit" value= "Amazon" ng-click="selectAmazon()">
 		</div>
-		
-		
+				
 		<span>	
 			<button class = "submit" ng-click="onclick()">Submit</button>
 		</span>	
 		
 	</div>
-	
-	
+		
 	<p>Your Search String: {{search}}</p>
 	
 	<p> {{printDatabase}}</p>
-	
-	
-	
-    <div id="error">{{errorMessage }} </div>
-	
+
+    <div id="error">{{errorMessage }} </div>	
     <div ng-hide="zeroLength"> {{length}}</div>
-
-
     <div class='loaderBox'>
 		<div class="loader" ng-show="loading">
 	</div>
@@ -139,10 +44,6 @@ input{
 			<ul>
 			
 				<li> {{resultText}}
-				
-					<!--<li>User name : {{doc.fromUser}}, User id: {{doc.fromUserId}},
-					 Tweet Created At: {{date[1] + " " + date[2] + " " + date[3]}}-->
-
 					<button ng-click="listclick()">{{seeButton}}</button>
 					<div ng-hide="showing">
 						{{post}}
@@ -150,13 +51,13 @@ input{
 							<button ng-click="commentHider()">See Comments</button>
 						</p>
 					    <div ng-hide="showComment">
-							<p>Comments:</p>
+							<p>Comments:</p>							
 							<div ng-repeat="comment in comments">
 								<ul>
-									<li>Comment------------<br/>
-									{{comment.content}}<br />
-									
-									{{comment.time}}
+									<li>Comment:<br/>
+									 Name:{{comment.name}}<br />	
+									 Content:{{comment.content}}<br />									
+									 {{comment.time}}
 									</li>
 								</ul>
 							</div>
@@ -164,37 +65,25 @@ input{
 							<p>
 								<button ng-click="showWriteComment()">Leave Your Comment</button>
 						    </p>
+							
 							<div ng-hide="writeComment">
-								<textarea class="input"  ng-model="newcomment" >
-									{{newcomment}}
-								</textarea>
-								
-								
-								
+								<span>Name</span><br/>
+								<input type="text" ng-model="commentName"><br />
+								<span>Comment</span><br/>
+								<textarea class="input" ng-model="newcomment" >
+									
+								</textarea>							
 								<button class = "submit1" ng-click="makeComment()">
 									Submit
-								</button>
-							
+								</button>		
 							</div>	
-						</div>
-						
-						
-						
-						
+							
+						</div>	
 					</div> 
-				</li>
-				
-				
-				
+				</li>	
 			</ul>
 		</div>
-		
-		
 	</div>
-
 </div>
-
-
-
 </body>
 </html>
