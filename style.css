@@ -1,0 +1,84 @@
+html,body{
+	padding:0;
+	border:0;
+}
+.box{
+	width:60%;
+	margin:0 auto;
+	position:relative;
+	top:100px;
+	padding:50px;
+	background-color:#d3d3d3;
+	height:auto;
+	font-size:1.5em;
+}
+input{
+	width:50%;
+	height:auto;
+	font-size:1em;
+}
+
+
+.choice:focus, .choice:hover,.choice:visited {
+    
+    background-color: #A9A9A9;
+	color:white;
+	/* some darker colour than the original colour */;
+}
+
+.submitContainer{
+	height:100px;
+	width:50%;
+	text-align:center;
+}
+.submit{
+	position:absolute;
+	right:100px;
+	color:black;
+	font-size:1.5em;
+	
+}
+
+.submit:focus, .submit:hover{
+	background-color: gray;
+	color:white;
+}
+
+#error{
+	color:red;
+}
+.input:focus {
+    font-size:1.5em;
+	color:gray;
+}
+.input{
+    width:400px;
+    height:200px;
+	resize: none; 
+	rows="10"; 
+	cols="10";
+}
+.loader {
+	position:relative;
+	left:20px;
+	border: 16px solid #f3f3f3;
+	border-radius: 50%;
+	border-top: 16px solid #3498db;
+	width: 50px;
+	height: 50px;
+	-webkit-animation: spin 2s linear infinite;
+	animation: spin 2s linear infinite;
+}
+
+@-webkit-keyframes spin {
+  0% { -webkit-transform: rotate(0deg); }
+  100% { -webkit-transform: rotate(360deg); }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+.loaderBox{
+	position:relative;
+}
