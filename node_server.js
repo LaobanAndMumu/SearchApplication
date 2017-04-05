@@ -1,7 +1,10 @@
+
+
+
 var express = require('express');
 var bodyParser = require('body-parser');
 var app = express();
-
+var ObjectId = require('mongodb').ObjectId; 
  
 var database;
 
@@ -26,11 +29,11 @@ app.get('/search', function (req, res){
 	
 	if(inputList[0] == 'amazon_video'){
 		findDict1 = {'reviewText':{$regex:inputList[1],$options:'i'}};
-		findDict2 = {_id:0,reviewerID:1,reviewerName:1,reviewText:1,reviewTime:1,comments:1};
+		findDict2 = {_id:1,reviewerID:1,reviewerName:1,reviewText:1,reviewTime:1,comments:1};
 	}
 	else{
-		findDict1 = {'tweet':{$regex:inputList[1],$options:'i'}};
-		findDict2 = {_id:0,fromUser:1,fromUserId:1,tweet:1,createdAt:1,comments:1};
+		findDict1 = {'text':{$regex:inputList[1],$options:'i'}};
+		findDict2 = {_id:1,fromUser:1,fromUserId:1,text:1,createdAt:1,comments:1};
 	}
 	
 	console.log(findDict1);
@@ -42,71 +45,49 @@ app.get('/search', function (req, res){
 		
 		
 		result = collection.find( findDict1,findDict2 ).toArray();
-		//{'tweet':{$regex:searchWord}},{_id:0,fromUser:1,fromUserId:1,tweet:1,createdAt:1}).toArray();
-		
-		//(function(err, result) {
-			//console.log(items);
+	
 			
 			result.then(function(something){
-				console.log(something);
+				
+	
 			res.json(something);
-			//console.log(something);
 			});
-		//});
+		
 	});
     
 });
 
 app.post('/post', function (req, res){
+	console.log('posted');
 	var databaseUse=req.body.whichDatabase;
-	var userId = req.body.id;
-	var comment = req.body.comment;
+	var docID = req.body.id;
 	
+	var comment = req.body.comment;
+	console.log(docID);
+	console.log(comment.name + " " + comment.content);
 	//amazon 
 	if (databaseUse == 'amazon_video'){
 		database.collection(databaseUse, function(err, collection) {
 		
-		console.log('collection');
+		console.log('connect to amazon_video');
 		
 		// insert a comment to the comments attribute
-		collection.update( { reviewerID: userId },
+		collection.update( {_id:new ObjectId(docID)},
 							{ $push: { comments: comment } }
 						 );
-		
-		
-		//{'tweet':{$regex:searchWord}},{_id:0,fromUser:1,fromUserId:1,tweet:1,createdAt:1}).toArray();
-		
-		//(function(err, result) {
-			//console.log(items);
-			//result.then(function(something){
-			//res.json(something);
-			//console.log(something);
-			//});
-		//});
 		});
-	}//if
+	}
 	else{
 		database.collection(databaseUse, function(err, collection) {
 		
-		console.log('collection');
-		
-		// insert a comment to the comments attribute
-		collection.update( { fromUserId: userId },
-							{ $push: { comments: comment } }
-						 )
-		
-		
-		//{'tweet':{$regex:searchWord}},{_id:0,fromUser:1,fromUserId:1,tweet:1,createdAt:1}).toArray();
-		
-		//(function(err, result) {
-			//console.log(items);
-			//result.then(function(something){
-			//res.json('');
-			//console.log(something);
+			console.log('connect to tweets_sandy');
+			
+			// insert a comment to the comments attribute
+			collection.update( {_id:new ObjectId(docID)},
+								{ $push: { comments: comment}});
 		});
-		//});
-		}//else
-	});
+	}//else
+});
 	
 	
 	
