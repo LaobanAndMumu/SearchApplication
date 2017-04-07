@@ -16,6 +16,7 @@ Download tweets_sandy.csv and video.json files to your computers.
 ## Installation
 
 Open a terminal for MongoDB driver, enter
+(Skip this step if working on Linux)
 ```sh
 $ mongod
 ```
@@ -104,6 +105,18 @@ $npm install body-parser
  - Create another folder inside backend, called frontend. 
 
  - Put controller.js, index.html and style.css into the frontend folder
+ 
+ 
+File structure is as follows: 
+```
+backend
+│   server.js
+└───frontend
+│   │   controller.js
+│   │   index.html
+│   │   style.css
+```
+
 
 ## Run the Application 
 And finally in the backend file directory,
